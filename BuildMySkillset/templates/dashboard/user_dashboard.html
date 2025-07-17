@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Build My Skillset{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="fw-bold text-primary mb-1">Welcome back, {{ current_user.name }}!</h1>
+                    <p class="text-muted mb-0">Track your learning progress and achievements</p>
+                </div>
+                <div class="user-avatar">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-user fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-book text-primary fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-primary mb-1">{{ enrollments|length }}</h3>
+                    <p class="text-muted mb-0">Enrolled Courses</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-briefcase text-success fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-success mb-1">{{ applications|length }}</h3>
+                    <p class="text-muted mb-0">Internship Applications</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-certificate text-warning fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-warning mb-1">{{ certificates|length }}</h3>
+                    <p class="text-muted mb-0">Certificates Earned</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-calendar text-info fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-info mb-1">{{ current_user.created_at.strftime('%b %Y') }}</h3>
+                    <p class="text-muted mb-0">Member Since</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Enrolled Courses -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">My Courses</h5>
+                        <a href="{{ url_for('courses') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i>Browse More
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if enrollments %}
+                        {% for enrollment in enrollments %}
+                        <div class="d-flex align-items-center mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                            <div class="course-icon me-3">
+                                <div class="rounded bg-primary bg-opacity-10 p-2">
+                                    <i class="fas fa-book text-primary"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">{{ enrollment.course.title }}</h6>
+                                <p class="text-muted small mb-1">{{ enrollment.course.level.title() }} • {{ enrollment.course.duration }}</p>
+                                <small class="text-muted">Enrolled: {{ enrollment.enrolled_at.strftime('%B %d, %Y') }}</small>
+                            </div>
+                            <div>
+                                <span class="badge bg-{{ 'success' if enrollment.status == 'completed' else 'primary' }}">
+                                    {{ enrollment.status.title() }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-book fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">No courses enrolled yet.</p>
+                            <a href="{{ url_for('courses') }}" class="btn btn-primary">
+                                <i class="fas fa-search me-2"></i>Explore Courses
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Internship Applications -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">My Applications</h5>
+                        <a href="{{ url_for('internships') }}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-plus me-1"></i>Apply More
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                        {% for application in applications %}
+                        <div class="d-flex align-items-center mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                            <div class="application-icon me-3">
+                                <div class="rounded bg-success bg-opacity-10 p-2">
+                                    <i class="fas fa-briefcase text-success"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">{{ application.internship.title }}</h6>
+                                <p class="text-muted small mb-1">{{ application.internship.duration }}</p>
+                                <small class="text-muted">Applied: {{ application.applied_at.strftime('%B %d, %Y') }}</small>
+                            </div>
+                            <div>
+                                <span class="badge bg-{{ 'warning' if application.status == 'pending' else 'success' if application.status == 'accepted' else 'danger' }}">
+                                    {{ application.status.title() }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-briefcase fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">No applications submitted yet.</p>
+                            <a href="{{ url_for('internships') }}" class="btn btn-success">
+                                <i class="fas fa-search me-2"></i>Find Internships
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Certificates -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0">My Certificates</h5>
+                </div>
+                <div class="card-body">
+                    {% if certificates %}
+                        {% for certificate in certificates %}
+                        <div class="d-flex align-items-center mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                            <div class="certificate-icon me-3">
+                                <div class="rounded bg-warning bg-opacity-10 p-2">
+                                    <i class="fas fa-certificate text-warning"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">{{ certificate.course_name }}</h6>
+                                <p class="text-muted small mb-1">Code: {{ certificate.certificate_code }}</p>
+                                <small class="text-muted">Issued: {{ certificate.issue_date.strftime('%B %d, %Y') }}</small>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('verify_certificate') }}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-external-link-alt me-1"></i>Verify
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-certificate fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">No certificates earned yet.</p>
+                            <small class="text-muted">Complete courses to earn certificates!</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('courses') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-book me-2"></i>Browse Courses
+                        </a>
+                        <a href="{{ url_for('internships') }}" class="btn btn-outline-success">
+                            <i class="fas fa-briefcase me-2"></i>Find Internships
+                        </a>
+                        <a href="{{ url_for('projects') }}" class="btn btn-outline-warning">
+                            <i class="fas fa-project-diagram me-2"></i>View Projects
+                        </a>
+                        <a href="{{ url_for('feedback') }}" class="btn btn-outline-info">
+                            <i class="fas fa-comment me-2"></i>Give Feedback
+                        </a>
+                        <a href="{{ url_for('verify_certificate') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-certificate me-2"></i>Verify Certificate
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

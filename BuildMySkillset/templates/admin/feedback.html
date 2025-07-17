@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Feedback - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="fw-bold text-primary mb-1">Feedback Management</h1>
+                    <p class="text-muted mb-0">Review and moderate student feedback</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pending Feedback -->
+    {% if pending_feedback %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0 text-warning">
+                        <i class="fas fa-clock me-2"></i>Pending Approval ({{ pending_feedback|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for feedback in pending_feedback %}
+                    <div class="feedback-item p-3 mb-3 border rounded">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="rating text-warning me-3">
+                                    {% for i in range(feedback.rating) %}
+                                        <i class="fas fa-star"></i>
+                                    {% endfor %}
+                                    {% for i in range(5 - feedback.rating) %}
+                                        <i class="far fa-star"></i>
+                                    {% endfor %}
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0">{{ feedback.user.name }}</h6>
+                                    <small class="text-muted">{{ feedback.course_name }}</small>
+                                </div>
+                            </div>
+                            <div>
+                                <form method="POST" action="{{ url_for('approve_feedback', feedback_id=feedback.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check me-1"></i>Approve
+                                    </button>
+                                </form>
+                                <button class="btn btn-danger btn-sm ms-1">
+                                    <i class="fas fa-times me-1"></i>Reject
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-muted mb-2">"{{ feedback.message }}"</p>
+                        <small class="text-muted">
+                            Submitted on {{ feedback.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                        </small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Approved Feedback -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0 text-success">
+                        <i class="fas fa-check-circle me-2"></i>Approved Feedback ({{ approved_feedback|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if approved_feedback %}
+                        {% for feedback in approved_feedback[-10:] %}
+                        <div class="feedback-item p-3 mb-3 border rounded bg-light">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="rating text-warning me-3">
+                                        {% for i in range(feedback.rating) %}
+                                            <i class="fas fa-star"></i>
+                                        {% endfor %}
+                                        {% for i in range(5 - feedback.rating) %}
+                                            <i class="far fa-star"></i>
+                                        {% endfor %}
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">{{ feedback.user.name }}</h6>
+                                        <small class="text-muted">{{ feedback.course_name }}</small>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success">Approved</span>
+                            </div>
+                            <p class="text-muted mb-2">"{{ feedback.message }}"</p>
+                            <small class="text-muted">
+                                Submitted on {{ feedback.created_at.strftime('%B %d, %Y') }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-comments fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">No approved feedback yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Feedback Statistics -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-star text-warning fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-warning mb-1">4.8</h3>
+                    <p class="text-muted mb-0">Average Rating</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-comments text-primary fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-primary mb-1">{{ (pending_feedback|length) + (approved_feedback|length) }}</h3>
+                    <p class="text-muted mb-0">Total Reviews</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-clock text-warning fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-warning mb-1">{{ pending_feedback|length }}</h3>
+                    <p class="text-muted mb-0">Pending Review</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

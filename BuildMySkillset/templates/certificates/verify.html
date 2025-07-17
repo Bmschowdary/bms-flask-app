@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Certificate - Build My Skillset{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <div class="text-center mb-5">
+                        <i class="fas fa-certificate text-primary fa-3x mb-3"></i>
+                        <h1 class="fw-bold text-primary mb-3">Certificate Verification</h1>
+                        <p class="lead text-muted">Enter the certificate code to verify its authenticity</p>
+                    </div>
+                    
+                    <form method="POST" class="mb-4">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                {{ form.certificate_code(class="form-control form-control-lg", placeholder="Enter certificate code (e.g., BMS-ABC123DE)") }}
+                                {% if form.certificate_code.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.certificate_code.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="fas fa-search me-2"></i>Verify
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    {% if certificate %}
+                        <div class="alert alert-success border-0 shadow-sm" role="alert">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 text-center">
+                                    <i class="fas fa-check-circle text-success fa-3x"></i>
+                                </div>
+                                <div class="col-md-10">
+                                    <h4 class="alert-heading text-success mb-3">Certificate Verified!</h4>
+                                    <div class="certificate-details">
+                                        <div class="row mb-2">
+                                            <div class="col-md-4"><strong>Certificate Code:</strong></div>
+                                            <div class="col-md-8">{{ certificate.certificate_code }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-md-4"><strong>Student Name:</strong></div>
+                                            <div class="col-md-8">{{ certificate.user.name }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-md-4"><strong>Course:</strong></div>
+                                            <div class="col-md-8">{{ certificate.course_name }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-md-4"><strong>Issue Date:</strong></div>
+                                            <div class="col-md-8">{{ certificate.issue_date.strftime('%B %d, %Y') }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-md-4"><strong>Status:</strong></div>
+                                            <div class="col-md-8">
+                                                <span class="badge bg-success">{{ certificate.status.title() }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mt-5">
+                        <h4 class="fw-bold mb-3">About Our Certificates</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-flex mb-3">
+                                    <i class="fas fa-shield-alt text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Secure & Authentic</h6>
+                                        <p class="text-muted mb-0">Each certificate has a unique code that cannot be duplicated.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex mb-3">
+                                    <i class="fas fa-globe text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Globally Recognized</h6>
+                                        <p class="text-muted mb-0">Our certificates are recognized by employers worldwide.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex mb-3">
+                                    <i class="fas fa-clock text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Lifetime Valid</h6>
+                                        <p class="text-muted mb-0">Your certificates remain valid for your entire career.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex mb-3">
+                                    <i class="fas fa-download text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Digital & Printable</h6>
+                                        <p class="text-muted mb-0">Download and print your certificates anytime.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How to Find Certificate Code -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold text-primary mb-3">How to Find Your Certificate Code</h2>
+                <p class="lead text-muted">Your certificate code is located in these places</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 60px; height: 60px;">
+                        <i class="fas fa-certificate fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">On Your Certificate</h5>
+                    <p class="text-muted">The code is prominently displayed on your digital certificate, usually at the bottom.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 60px; height: 60px;">
+                        <i class="fas fa-envelope fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Completion Email</h5>
+                    <p class="text-muted">We send you the certificate code via email when you complete a course.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 60px; height: 60px;">
+                        <i class="fas fa-tachometer-alt fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Your Dashboard</h5>
+                    <p class="text-muted">All your certificate codes are available in your student dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

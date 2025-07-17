@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Internships - Build My Skillset{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-12">
+                <h1 class="display-4 fw-bold text-primary mb-3">Internship Opportunities</h1>
+                <p class="lead text-muted">Gain real-world experience and jumpstart your career</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Internships Grid -->
+<section class="py-5">
+    <div class="container">
+        {% if internships.items %}
+            <div class="row">
+                {% for internship in internships.items %}
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm internship-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="badge bg-success fs-6">{{ internship.duration }}</span>
+                                {% if internship.stipend %}
+                                    <span class="text-muted fw-bold">
+                                        <i class="fas fa-dollar-sign me-1"></i>{{ internship.stipend }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <h4 class="card-title fw-bold mb-3">{{ internship.title }}</h4>
+                            <p class="card-text text-muted mb-3">{{ internship.description[:200] }}...</p>
+                            
+                            {% if internship.location %}
+                                <div class="mb-3">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <span class="text-muted">{{ internship.location }}</span>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Posted {{ internship.created_at.strftime('%B %d, %Y') }}
+                                </small>
+                                <a href="{{ url_for('internship_detail', internship_id=internship.id) }}" 
+                                   class="btn btn-outline-success">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if internships.pages > 1 %}
+            <div class="d-flex justify-content-center mt-5">
+                <nav aria-label="Internship pagination">
+                    <ul class="pagination">
+                        {% if internships.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('internships', page=internships.prev_num) }}">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page_num in internships.iter_pages() %}
+                            {% if page_num %}
+                                {% if page_num != internships.page %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('internships', page=page_num) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if internships.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('internships', page=internships.next_num) }}">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
+                <h3 class="text-muted">No internships available</h3>
+                <p class="text-muted">Check back later for new opportunities.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h3 class="fw-bold text-primary mb-3">Ready to Apply?</h3>
+                <p class="lead text-muted mb-4">
+                    Join our internship program and gain valuable experience while working on real projects.
+                </p>
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Create Account to Apply
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

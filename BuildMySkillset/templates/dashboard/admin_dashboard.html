@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Build My Skillset{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="fw-bold text-primary mb-1">Admin Dashboard</h1>
+                    <p class="text-muted mb-0">Manage your e-learning platform</p>
+                </div>
+                <div class="admin-avatar">
+                    <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-user-shield fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Overview -->
+    <div class="row mb-5">
+        <div class="col-md-2 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-users text-primary fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-primary mb-1">{{ total_users }}</h3>
+                    <p class="text-muted mb-0 small">Total Users</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-2 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-book text-success fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-success mb-1">{{ total_courses }}</h3>
+                    <p class="text-muted mb-0 small">Total Courses</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-2 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-briefcase text-warning fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-warning mb-1">{{ total_internships }}</h3>
+                    <p class="text-muted mb-0 small">Internships</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-2 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-file-alt text-info fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-info mb-1">{{ total_applications }}</h3>
+                    <p class="text-muted mb-0 small">Applications</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-2 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-comment text-purple fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-purple mb-1">{{ pending_feedback }}</h3>
+                    <p class="text-muted mb-0 small">Pending Reviews</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-2 mb-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-envelope text-danger fa-2x mb-3"></i>
+                    <h3 class="fw-bold text-danger mb-1">{{ pending_contacts }}</h3>
+                    <p class="text-muted mb-0 small">New Messages</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('add_course') }}" class="btn btn-primary w-100 py-3">
+                                <i class="fas fa-plus-circle fa-lg mb-2 d-block"></i>
+                                Add New Course
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('admin_courses') }}" class="btn btn-success w-100 py-3">
+                                <i class="fas fa-book fa-lg mb-2 d-block"></i>
+                                Manage Courses
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('admin_certificates') }}" class="btn btn-warning w-100 py-3">
+                                <i class="fas fa-certificate fa-lg mb-2 d-block"></i>
+                                Issue Certificates
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('admin_feedback') }}" class="btn btn-info w-100 py-3">
+                                <i class="fas fa-comments fa-lg mb-2 d-block"></i>
+                                Review Feedback
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0">Platform Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-primary mb-2">System Status</h6>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="status-indicator bg-success rounded-circle me-2" style="width: 8px; height: 8px;"></div>
+                            <span class="text-muted small">All systems operational</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="status-indicator bg-success rounded-circle me-2" style="width: 8px; height: 8px;"></div>
+                            <span class="text-muted small">Database connected</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="status-indicator bg-success rounded-circle me-2" style="width: 8px; height: 8px;"></div>
+                            <span class="text-muted small">File uploads working</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-primary mb-2">Platform Statistics</h6>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="border-end">
+                                    <h4 class="fw-bold text-success mb-0">98%</h4>
+                                    <small class="text-muted">Uptime</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="fw-bold text-primary mb-0">4.8/5</h4>
+                                <small class="text-muted">Avg Rating</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0">Pending Actions</h5>
+                </div>
+                <div class="card-body">
+                    {% if pending_feedback > 0 %}
+                    <div class="alert alert-warning border-0 mb-3" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <div class="flex-grow-1">
+                                <strong>{{ pending_feedback }} feedback reviews</strong> waiting for approval
+                            </div>
+                            <a href="{{ url_for('admin_feedback') }}" class="btn btn-warning btn-sm">Review</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if pending_contacts > 0 %}
+                    <div class="alert alert-info border-0 mb-3" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-envelope me-2"></i>
+                            <div class="flex-grow-1">
+                                <strong>{{ pending_contacts }} new messages</strong> from contact form
+                            </div>
+                            <a href="#" class="btn btn-info btn-sm">View</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if pending_feedback == 0 and pending_contacts == 0 %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-check-circle text-success fa-2x mb-3"></i>
+                        <p class="text-muted mb-0">All caught up! No pending actions.</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <h6 class="fw-bold text-primary mb-3">Recent Activity</h6>
+                        <div class="activity-item d-flex align-items-center mb-2">
+                            <div class="activity-icon me-2">
+                                <i class="fas fa-user-plus text-success small"></i>
+                            </div>
+                            <small class="text-muted">5 new user registrations today</small>
+                        </div>
+                        <div class="activity-item d-flex align-items-center mb-2">
+                            <div class="activity-icon me-2">
+                                <i class="fas fa-book text-primary small"></i>
+                            </div>
+                            <small class="text-muted">12 course enrollments this week</small>
+                        </div>
+                        <div class="activity-item d-flex align-items-center">
+                            <div class="activity-icon me-2">
+                                <i class="fas fa-certificate text-warning small"></i>
+                            </div>
+                            <small class="text-muted">3 certificates issued today</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
